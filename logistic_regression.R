@@ -108,10 +108,28 @@ plot(allEffects(hyp.out))
 ##   will need to clean up at least some of the variables before fitting
 ##   the model.
 library(tidyverse)
-glimpse(NH11)
-NH11 %>%
-  count(everwrk)
-NH11 %>%
-  count(age_p)
-NH11 %>%
-  count(r_maritl)
+str(NH11$everwrk)
+levels(NH11$everwrk)
+str(NH11$r_maritl)
+levels(NH11$r_maritl)
+
+NH11$mean_age_p <- mean(NH11$age_p, na.rm = TRUE)
+NH11$everwrk <- factor(NH11$everwrk, levels = c("1 Yes", "2 No"))
+everwrk.out <- glm(everwrk~ mean_age_p + r_maritl, data = NH11, family = "binomial")
+coef(summary(everwrk.out))
+
+
+##   transform the coefficients to make them easier to interpret
+
+trans_everwrk.out <- coef(summary(everwrk.out))
+trans_everwrk.out[, "Estimate"] <- exp(coef(everwrk.out))
+trans_everwrk.out
+
+
+
+
+
+
+
+
+
